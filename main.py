@@ -8,11 +8,28 @@ cur = con.cursor()
 app = FastAPI()
 
 
+# Get endpoints for retrieving info from the database and transmiting it
+# through the api
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 
+@app.get("/Gamer/")
+async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
+    query = f"""
+        SELECT * FROM Gamer WHERE name = {name};
+    """
+    query_data = cur.execute(query)
+
+    return {
+            "name": query_data[1],
+            "age": query_data[2],
+            "nationality": query_data[3]
+    }
+
+
+# Post endpoints for inserting information through the api
 @app.post("/insert_game")
 async def insert_game(
         title: str,
@@ -30,7 +47,7 @@ async def insert_game(
     return {"Query completed"}
 
 
-@app.post("/insert_gamer")
+@app.post("/insert_gamer/")
 async def insert_gamer(
         name: str,
         nationality: str,
@@ -45,7 +62,7 @@ async def insert_gamer(
     return {"Query completed"}
 
 
-@app.post("/insert_purchase")
+@app.post("/insert_purchase/")
 async def insert_purchase(
         gamer_id: int,
         game_id: int,
@@ -61,7 +78,7 @@ async def insert_purchase(
     return {"Query completed"}
 
 
-@app.post("/insert_review")
+@app.post("/insert_review/")
 async def insert_review(
         gamer_id: int,
         game_id: int,
