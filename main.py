@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import sqlite3
 import logging
 
-database_path = "./online_game_shop.db"
+database_path = "online_game_shop.db"
 con = sqlite3.connect(database_path)
 cur = con.cursor()
 
