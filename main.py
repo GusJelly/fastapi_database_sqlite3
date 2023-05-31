@@ -1,26 +1,24 @@
 from fastapi import FastAPI
 import sqlite3
-import logging
-from models import GameTable, UserTable, PurchaseTable, ReviewTable
+from models import Game, User, Purchase, Review
 
+# Create connection to database file:
 database_path = "online_game_shop.db"
 con = sqlite3.connect(database_path)
 cur = con.cursor()
 
 app = FastAPI()
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
 
-
+# http requests:
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 
 # Create database:
-@app.get("/setup/user")
-async def setup_user():
+@app.post("/setup/user")
+async def setup_user(item: User):
     cur.execute("""
         CREATE TABLE User(
             id INT PRIMARY KEY NOT NULL,
@@ -85,25 +83,21 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
     query = f"""
         SELECT * FROM Gamer WHERE name = {name};
     """
-    try:
-        cur.execute(query, (name))
-        query_data = cur.fetchone()
+    cur.execute(query, (name))
+    query_data = cur.fetchone()
 
-        if query_data:
-            return {
+    if query_data:
+        return {
                 "name": query_data[1],
                 "age": query_data[2],
                 "nationality": query_data[3]
-            }
-        else:
-            return {"message": "Gamer not found"}
-    except Exception as e:
-        logging.error(f"Error retrieving gamer: {e}")
-        return {"message": "Internal server error"}
+                }
+    else:
+        return {"message": "Gamer not found"}
 
 
 @app.post("/Game/post")
-async def post_game(item: GameTable):
+async def post_game(item: Game):
     data = item.dict()
     query = """
         INSERT INTO Game (
@@ -129,7 +123,7 @@ async def post_game(item: GameTable):
 
 
 @app.post("/User/post")
-async def post_user(item: UserTable):
+async def post_user(item: User):
     data = item.dict()
     query = """
         INSERT INTO User (
@@ -153,7 +147,7 @@ async def post_user(item: UserTable):
 
 
 @app.post("/Purchase/post")
-async def post_purchase(item: PurchaseTable):
+async def post_purchase(item: Purchase):
     data = item.dict()
     query = """
         INSERT INTO Purchase (
@@ -179,7 +173,7 @@ async def post_purchase(item: PurchaseTable):
 
 
 @app.post("/Review/post")
-async def post_review(item: ReviewTable):
+async def post_review(item: Review):
     data = item.dict()
     query = """
         INSERT INTO Review (
@@ -199,7 +193,7 @@ async def post_review(item: ReviewTable):
     ))
 
     con.commit()
-    return "Item posted"
+    return ""
 
 
 @app.on_event("shutdown")
