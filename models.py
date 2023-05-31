@@ -1,32 +1,32 @@
 from pydantic import BaseModel
 
 
-class User(BaseModel):
-    id: int
+class UserTable(BaseModel):
+    id: int = None
     name: str
     age: int
     nationality: str
 
 
-class Game(BaseModel):
-    id: int
+class GameTable(BaseModel):
+    id: int = None
     title: str
     genre: str
-    number_of_players: int
+    number_of_players: int = None
     price: int
     age_range: int
 
 
-class Purchase(BaseModel):
-    id: int
+class PurchaseTable(BaseModel):
+    id: int = None
     game_id: int
     user_id: int
     price: int
     date: int
 
 
-class Review(BaseModel):
-    id: int
+class ReviewTable(BaseModel):
+    id: int = None
     game_id: int
     message: str
     rating: int

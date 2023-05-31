@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import sqlite3
 import logging
-import models
+from models import GameTable, UserTable, PurchaseTable, ReviewTable
 
 database_path = "online_game_shop.db"
 con = sqlite3.connect(database_path)
@@ -80,7 +80,7 @@ async def setup_review():
     """)
 
 
-@app.get("/Gamer/")
+@app.get("/Gamer")
 async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
     query = f"""
         SELECT * FROM Gamer WHERE name = {name};
@@ -100,6 +100,34 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
     except Exception as e:
         logging.error(f"Error retrieving gamer: {e}")
         return {"message": "Internal server error"}
+
+
+@app.post("/Game_posting")
+async def post_game(item: GameTable):
+    data = item.dict()
+    query = """
+        INSERT INTO Game (
+            id,
+            title,
+            genre,
+            number_of_players,
+            price,
+            age_range
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+    """
+
+    cur.execute(query, (
+        data['id'],
+        data['title'],
+        data['genre'],
+        data['number_of_players'],
+        data['price'],
+        data['age_range']
+    ))
+
+    con.commit()
+    return "Item posted"
 
 
 @app.on_event("shutdown")
