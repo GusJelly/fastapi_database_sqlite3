@@ -110,18 +110,16 @@ async def post_game(item: GameTable):
             id,
             title,
             genre,
-            number_of_players,
             price,
             age_range
         )
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     """
 
     cur.execute(query, (
         data['id'],
         data['title'],
         data['genre'],
-        data['number_of_players'],
         data['price'],
         data['age_range']
     ))

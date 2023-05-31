@@ -12,7 +12,6 @@ class GameTable(BaseModel):
     id: int = None
     title: str
     genre: str
-    number_of_players: int = None
     price: int
     age_range: int
 
