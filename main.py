@@ -102,7 +102,7 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
         return {"message": "Internal server error"}
 
 
-@app.post("/Game_posting")
+@app.post("/Game/post")
 async def post_game(item: GameTable):
     data = item.dict()
     query = """
@@ -122,6 +122,80 @@ async def post_game(item: GameTable):
         data['genre'],
         data['price'],
         data['age_range']
+    ))
+
+    con.commit()
+    return "Item posted"
+
+
+@app.post("/User/post")
+async def post_user(item: UserTable):
+    data = item.dict()
+    query = """
+        INSERT INTO User (
+            id,
+            name,
+            age,
+            nationality
+        )
+        VALUES (?, ?, ?, ?)
+    """
+
+    cur.execute(query, (
+        data['id'],
+        data['name'],
+        data['age'],
+        data['nationality']
+    ))
+
+    con.commit()
+    return "Item posted"
+
+
+@app.post("/Purchase/post")
+async def post_purchase(item: PurchaseTable):
+    data = item.dict()
+    query = """
+        INSERT INTO Purchase (
+            id,
+            game_id,
+            user_id,
+            price,
+            date
+        )
+        VALUES (?, ?, ?, ?, ?)
+    """
+
+    cur.execute(query, (
+        data['id'],
+        data['game_id'],
+        data['user_id'],
+        data['price'],
+        data['date']
+    ))
+
+    con.commit()
+    return "Item posted"
+
+
+@app.post("/Review/post")
+async def post_review(item: ReviewTable):
+    data = item.dict()
+    query = """
+        INSERT INTO Review (
+            id,
+            game_id,
+            message,
+            rating
+        )
+        VALUES (?, ?, ?, ?)
+    """
+
+    cur.execute(query, (
+        data['id'],
+        data['game_id'],
+        data['message'],
+        data['rating']
     ))
 
     con.commit()
