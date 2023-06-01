@@ -16,12 +16,15 @@ async def root():
     return {"message": "Hello World"}
 
 
+# id INTEGER PRIMARY KEY NOT NULL <- isto faz com que os id's
+    # auto incrementem com cada entrada;
+
 # Create database:
 @app.post("/setup/user")
 async def setup_user(item: User):
     cur.execute("""
         CREATE TABLE User(
-            id INT PRIMARY KEY NOT NULL,
+            id INTEGER PRIMARY KEY NOT NULL,
             name VARCHAR(100) NOT NULL,
             age INT,
             nationality VARCHAR(100)
@@ -35,7 +38,7 @@ async def setup_user(item: User):
 async def setup_game():
     cur.execute("""
         CREATE TABLE Game(
-            id INT PRIMARY KEY NOT NULL,
+            id INTEGER PRIMARY KEY NOT NULL,
             title VARCHAR(100),
             genre VARCHAR(100),
             price INT,
@@ -50,7 +53,7 @@ async def setup_game():
 async def setup_purchase():
     cur.execute("""
         CREATE TABLE Purchase(
-            id INT PRIMARY KEY NOT NULL,
+            id INTEGER PRIMARY KEY NOT NULL,
             game_id INT NOT NULL,
             user_id INT NOT NULL,
             price INT,
@@ -67,7 +70,7 @@ async def setup_purchase():
 async def setup_review():
     cur.execute("""
         CREATE TABLE Review(
-            id INT PRIMARY KEY NOT NULL,
+            id INTEGER PRIMARY KEY NOT NULL,
             user_id NOT NULL,
             game_id NOT NULL,
             message VARCHAR(100) NOT NULL,
@@ -76,6 +79,8 @@ async def setup_review():
             FOREIGN KEY(game_id) REFERENCES Game(id)
         )
     """)
+    con.commit()
+    return {"Table Created"}
 
 
 @app.get("/Gamer")
@@ -101,17 +106,15 @@ async def post_game(item: Game):
     data = item.dict()
     query = """
         INSERT INTO Game (
-            id,
             title,
             genre,
             price,
             age_range
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?)
     """
 
     cur.execute(query, (
-        data['id'],
         data['title'],
         data['genre'],
         data['price'],
@@ -127,16 +130,14 @@ async def post_user(item: User):
     data = item.dict()
     query = """
         INSERT INTO User (
-            id,
             name,
             age,
             nationality
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?)
     """
 
     cur.execute(query, (
-        data['id'],
         data['name'],
         data['age'],
         data['nationality']
@@ -151,17 +152,15 @@ async def post_purchase(item: Purchase):
     data = item.dict()
     query = """
         INSERT INTO Purchase (
-            id,
             game_id,
             user_id,
             price,
             date
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?)
     """
 
     cur.execute(query, (
-        data['id'],
         data['game_id'],
         data['user_id'],
         data['price'],
@@ -177,16 +176,14 @@ async def post_review(item: Review):
     data = item.dict()
     query = """
         INSERT INTO Review (
-            id,
             game_id,
             message,
             rating
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?)
     """
 
     cur.execute(query, (
-        data['id'],
         data['game_id'],
         data['message'],
         data['rating']
