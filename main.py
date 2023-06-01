@@ -16,12 +16,13 @@ async def root():
     return {"message": "Hello World"}
 
 
+# Create database:  ===========================================================
+
 # id INTEGER PRIMARY KEY NOT NULL <- isto faz com que os id's
     # auto incrementem com cada entrada;
 
-# Create database  ===========================================================
 @app.get("/setup/user")
-async def setup_user(item: User):
+async def setup_user():
     cur.execute("""
         CREATE TABLE User(
             id INTEGER PRIMARY KEY NOT NULL,
@@ -103,6 +104,8 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
         return {"message": "Gamer not found"}
 
 
+# Post endpoints:  ============================================================
+
 # Post a new game into the Game table:
 @app.post("/Game/post")
 async def post_game(item: Game):
@@ -128,7 +131,7 @@ async def post_game(item: Game):
     return "Item posted"
 
 
-# Post a new user into the User table
+# Post a new user into the User table:
 @app.post("/User/post")
 async def post_user(item: User):
     data = item.dict()
@@ -151,7 +154,7 @@ async def post_user(item: User):
     return "Item posted"
 
 
-# Post a new purchase into the purchase table
+# Post a new purchase into the purchase table:
 @app.post("/Purchase/post")
 async def post_purchase(item: Purchase):
     data = item.dict()
@@ -176,7 +179,7 @@ async def post_purchase(item: Purchase):
     return "Item posted"
 
 
-# Post a new review into the review table
+# Post a new review into the review table:
 @app.post("/Review/post")
 async def post_review(item: Review):
     data = item.dict()
@@ -197,8 +200,10 @@ async def post_review(item: Review):
 
     con.commit()
     return ""
+#  ===========================================================================
 
 
+# shutdown the database connection:
 @app.on_event("shutdown")
 async def shutdown():
     con.close()
