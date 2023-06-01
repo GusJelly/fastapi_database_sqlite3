@@ -3,14 +3,14 @@ from typing import Optional
 
 
 # SCHEMAS:
-class User(BaseModel):
+class UserCreate(BaseModel):
     id: Optional[int]  # O Optional deixa a base de dados lidar com os ids
     name: str
     age: int
     nationality: str
 
 
-class Game(BaseModel):
+class GameCreate(BaseModel):
     id: Optional[int]
     title: str
     genre: str
@@ -18,7 +18,7 @@ class Game(BaseModel):
     age_range: int
 
 
-class Purchase(BaseModel):
+class PurchaseCreate(BaseModel):
     id: Optional[int]
     game_id: int
     user_id: int
@@ -26,7 +26,7 @@ class Purchase(BaseModel):
     date: int
 
 
-class Review(BaseModel):
+class ReviewCreate(BaseModel):
     id: Optional[int]
     game_id: int
     message: str
