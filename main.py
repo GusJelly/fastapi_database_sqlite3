@@ -19,8 +19,8 @@ async def root():
 # id INTEGER PRIMARY KEY NOT NULL <- isto faz com que os id's
     # auto incrementem com cada entrada;
 
-# Create database:
-@app.post("/setup/user")
+# Create database  ===========================================================
+@app.get("/setup/user")
 async def setup_user(item: User):
     cur.execute("""
         CREATE TABLE User(
@@ -81,12 +81,14 @@ async def setup_review():
     """)
     con.commit()
     return {"Table Created"}
+# ============================================================================
 
 
-@app.get("/Gamer")
+# Pesquisar por um User por nome:
+@app.get("/User")
 async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
-    query = f"""
-        SELECT * FROM Gamer WHERE name = {name};
+    query = """
+        SELECT * FROM User WHERE name = ?;
     """
     cur.execute(query, (name))
     query_data = cur.fetchone()
@@ -101,6 +103,7 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
         return {"message": "Gamer not found"}
 
 
+# Post a new game into the Game table:
 @app.post("/Game/post")
 async def post_game(item: Game):
     data = item.dict()
@@ -125,6 +128,7 @@ async def post_game(item: Game):
     return "Item posted"
 
 
+# Post a new user into the User table
 @app.post("/User/post")
 async def post_user(item: User):
     data = item.dict()
@@ -147,6 +151,7 @@ async def post_user(item: User):
     return "Item posted"
 
 
+# Post a new purchase into the purchase table
 @app.post("/Purchase/post")
 async def post_purchase(item: Purchase):
     data = item.dict()
@@ -171,6 +176,7 @@ async def post_purchase(item: Purchase):
     return "Item posted"
 
 
+# Post a new review into the review table
 @app.post("/Review/post")
 async def post_review(item: Review):
     data = item.dict()

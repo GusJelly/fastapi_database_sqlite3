@@ -4,7 +4,7 @@ from typing import Optional
 
 # SCHEMAS:
 class User(BaseModel):
-    id: Optional[int]
+    id: Optional[int]  # O Optional deixa a base de dados lidar com os ids
     name: str
     age: int
     nationality: str
