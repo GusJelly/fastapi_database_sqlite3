@@ -4,8 +4,8 @@ from models import Game, User, Purchase, Review
 
 # Create connection to database file:
 database_path = "online_game_shop.db"
-con = sqlite3.connect(database_path)
-cur = con.cursor()
+con = sqlite3.connect(database_path) #conexao a base de dados
+cur = con.cursor() #cursor é um ponteiro para uma posicao especifica na base de daodos
 
 app = FastAPI()
 
@@ -21,7 +21,8 @@ async def root():
 # id INTEGER PRIMARY KEY NOT NULL <- isto faz com que os id's
     # auto incrementem com cada entrada;
 
-@app.get("/setup/user")
+#TODO alterar para post a criçao das tabelas
+@app.post("/setup/user")
 async def setup_user():
     cur.execute("""
         CREATE TABLE User(
@@ -35,7 +36,7 @@ async def setup_user():
     return "table created"
 
 
-@app.get("/setup/game")
+@app.post("/setup/game")
 async def setup_game():
     cur.execute("""
         CREATE TABLE Game(
@@ -50,7 +51,7 @@ async def setup_game():
     return "table created"
 
 
-@app.get("/setup/purchase")
+@app.post("/setup/purchase")
 async def setup_purchase():
     cur.execute("""
         CREATE TABLE Purchase(
@@ -67,7 +68,7 @@ async def setup_purchase():
     return "table created"
 
 
-@app.get("/setup/review")
+@app.post("/setup/review")
 async def setup_review():
     cur.execute("""
         CREATE TABLE Review(
@@ -92,7 +93,7 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
         SELECT * FROM User WHERE name = ?;
     """
     cur.execute(query, (name))
-    query_data = cur.fetchone()
+    query_data = cur.fetchone() #aqui nao deverias ser fetch all para termos todos com esse nome?
 
     if query_data:
         return {
@@ -117,8 +118,9 @@ async def post_game(item: Game):
             price,
             age_range
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?) 
     """
+    # ? sao place holders
 
     cur.execute(query, (
         data['title'],
@@ -200,6 +202,8 @@ async def post_review(item: Review):
 
     con.commit()
     return ""
+
+
 #  ===========================================================================
 
 
