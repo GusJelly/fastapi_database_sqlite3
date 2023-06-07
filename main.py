@@ -93,7 +93,7 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
         SELECT * FROM User WHERE name = ?;
     """
     cur.execute(query, (name))
-    query_data = cur.fetchone() #aqui nao deverias ser fetch all para termos todos com esse nome?
+    query_data = cur.fetchoneall() #aqui nao deverias ser fetch all para termos todos com esse nome?
 
     if query_data:
         return {
