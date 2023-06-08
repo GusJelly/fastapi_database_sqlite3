@@ -70,6 +70,7 @@ async def setup_purchase():
 
 @app.post("/setup/review")
 async def setup_review():
+
     cur.execute("""
         CREATE TABLE Review(
             id INTEGER PRIMARY KEY NOT NULL,
@@ -88,12 +89,15 @@ async def setup_review():
 
 # Pesquisar por um User por nome:
 @app.get("/User")
-async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
+async def get_gamer(name: str):
+
     query = """
-        SELECT * FROM User WHERE name = ?;
+        SELECT * FROM User WHERE name = ?
     """
-    cur.execute(query, (name))
-    query_data = cur.fetchoneall() #aqui nao deverias ser fetch all para termos todos com esse nome?
+
+    cur.execute(query, (name,)) #tem mesmo de ser (name,) para ser uma lista de argumentos
+
+    query_data = cur.fetchone()
 
     if query_data:
         return {
@@ -104,12 +108,33 @@ async def gamer(name: str, age: int = 0, nationality: str = "portugal"):
     else:
         return {"message": "Gamer not found"}
 
+#pesquisar o jogo por ID
+@app.get("/Game")
+async def get_game(id: int):
+
+    query = """
+        SELECT * FROM Game WHERE id = ?;
+    """
+    cur.execute(query, (id,))
+    query_data = cur.fetchone()
+
+    if query_data:
+        return {
+                "title": query_data[1],
+                "genre": query_data[2],
+                "price": query_data[3],
+                "age_range": query_data[4]
+                }
+    else:
+        return {"message": "Gamer not found"}
+
+#TODO get_Purchase e get_Review
 
 # Post endpoints:  ============================================================
 
 # Post a new game into the Game table:
 @app.post("/Game/post")
-async def post_game(item: Game):
+async def create_game(item: Game):
     data = item.dict()
     query = """
         INSERT INTO Game (
@@ -135,7 +160,7 @@ async def post_game(item: Game):
 
 # Post a new user into the User table:
 @app.post("/User/post")
-async def post_user(item: User):
+async def create_user(item: User):
     data = item.dict()
     query = """
         INSERT INTO User (
@@ -158,7 +183,7 @@ async def post_user(item: User):
 
 # Post a new purchase into the purchase table:
 @app.post("/Purchase/post")
-async def post_purchase(item: Purchase):
+async def create_purchase(item: Purchase):
     data = item.dict()
     query = """
         INSERT INTO Purchase (
@@ -183,7 +208,7 @@ async def post_purchase(item: Purchase):
 
 # Post a new review into the review table:
 @app.post("/Review/post")
-async def post_review(item: Review):
+async def create_review(item: Review):
     data = item.dict()
     query = """
         INSERT INTO Review (
@@ -202,6 +227,55 @@ async def post_review(item: Review):
 
     con.commit()
     return ""
+
+#update da tabela game
+@app.put("/Game/update/{id}")
+async def update_game(id: int, item: Game):
+    data = item.dict()
+    query = """
+        UPDATE Game
+        SET title = ?,
+            genre = ?,
+            price = ?,
+            age_range = ?
+        WHERE id = ?
+    """
+
+    cur.execute(query, (
+        data['title'],
+        data['genre'],
+        data['price'],
+        data['age_range'],
+        id
+    ))
+
+    con.commit()
+    return "Item updated"
+
+#update da tabela user
+@app.put("/User/update/{user_id}")
+async def update_user(user_id: int, item: User):
+    data = item.dict()
+    query = """
+        UPDATE User
+        SET name = ?,
+            age = ?,
+            nationality = ?
+        WHERE id = ?
+    """
+
+    cur.execute(query, (
+        data['name'],
+        data['age'],
+        data['nationality'],
+        user_id
+    ))
+
+    con.commit()
+    return "Item updated"
+
+#TODO fazer um update apenas de um campo
+
 
 
 #  ===========================================================================
