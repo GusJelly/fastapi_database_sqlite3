@@ -276,6 +276,23 @@ async def update_user(user_id: int, item: User):
 
 #TODO fazer um update apenas de um campo
 
+@app.put("/User/update/{user_id}/{update_camp}")
+async def update_one_camp_user(user_id: int, update_camp: str, item: User):
+    data = item.dict()
+    query = f"""
+        UPDATE User
+        SET {update_camp} = ?
+        WHERE id = ?
+    """
+
+    cur.execute(query, (
+        data[update_camp],
+        user_id
+    ))
+
+    con.commit()
+    return "Item updated"
+
 
 
 #  ===========================================================================
