@@ -4,8 +4,8 @@ from models import Game, User, Purchase, Review
 
 # Create connection to database file:
 database_path = "online_game_shop.db"
-con = sqlite3.connect(database_path) #conexao a base de dados
-cur = con.cursor() #cursor é um ponteiro para uma posicao especifica na base de daodos
+con = sqlite3.connect(database_path)  # conexao a base de dados
+cur = con.cursor()  # cursor é um ponteiro para uma posicao especifica na base de daodos
 
 app = FastAPI()
 
@@ -21,7 +21,6 @@ async def root():
 # id INTEGER PRIMARY KEY NOT NULL <- isto faz com que os id's
     # auto incrementem com cada entrada;
 
-#TODO alterar para post a criçao das tabelas
 @app.post("/setup/user")
 async def setup_user():
     cur.execute("""
@@ -95,7 +94,7 @@ async def get_gamer(name: str):
         SELECT * FROM User WHERE name = ?
     """
 
-    cur.execute(query, (name,)) #tem mesmo de ser (name,) para ser uma lista de argumentos
+    cur.execute(query, (name,))  # tem mesmo de ser (name,) para ser uma lista de argumentos
 
     query_data = cur.fetchone()
 
@@ -108,7 +107,8 @@ async def get_gamer(name: str):
     else:
         return {"message": "Gamer not found"}
 
-#pesquisar o jogo por ID
+
+# pesquisar o jogo por ID
 @app.get("/Game")
 async def get_game(id: int):
 
@@ -128,9 +128,10 @@ async def get_game(id: int):
     else:
         return {"message": "Gamer not found"}
 
-#TODO get_Purchase e get_Review
+# TODO get_Purchase e get_Review
 
 # Post endpoints:  ============================================================
+
 
 # Post a new game into the Game table:
 @app.post("/Game/post")
@@ -143,7 +144,7 @@ async def create_game(item: Game):
             price,
             age_range
         )
-        VALUES (?, ?, ?, ?) 
+        VALUES (?, ?, ?, ?)
     """
     # ? sao place holders
 
@@ -228,7 +229,8 @@ async def create_review(item: Review):
     con.commit()
     return ""
 
-#update da tabela game
+
+# update da tabela game
 @app.put("/Game/update/{id}")
 async def update_game(id: int, item: Game):
     data = item.dict()
@@ -252,7 +254,8 @@ async def update_game(id: int, item: Game):
     con.commit()
     return "Item updated"
 
-#update da tabela user
+
+# update da tabela user
 @app.put("/User/update/{user_id}")
 async def update_user(user_id: int, item: User):
     data = item.dict()
@@ -274,7 +277,8 @@ async def update_user(user_id: int, item: User):
     con.commit()
     return "Item updated"
 
-#TODO fazer um update apenas de um campo
+
+# TODO fazer um update apenas de um campo
 
 @app.put("/User/update/{user_id}/{update_camp}")
 async def update_one_camp_user(user_id: int, update_camp: str, item: User):
@@ -292,7 +296,6 @@ async def update_one_camp_user(user_id: int, update_camp: str, item: User):
 
     con.commit()
     return "Item updated"
-
 
 
 #  ===========================================================================
