@@ -281,7 +281,9 @@ async def update_user(user_id: int, item: User):
 # TODO fazer um update apenas de um campo
 
 @app.put("/User/update/{user_id}/{update_camp}")
-async def update_one_camp_user(user_id: int, update_camp: str, item: User):
+async def update_one_user(user_id: int,
+                          update_camp: str,
+                          item: User):
     data = item.dict()
     query = f"""
         UPDATE User
@@ -292,6 +294,69 @@ async def update_one_camp_user(user_id: int, update_camp: str, item: User):
     cur.execute(query, (
         data[update_camp],
         user_id
+    ))
+
+    con.commit()
+    return "Item updated"
+
+
+# Update one camp of Game table:
+@app.put("/Game/update/{game_id}/{update_camp}")
+async def update_one_game(game_id: int,
+                          update_camp: str,
+                          item: Game):
+    data = item.dict()
+    query = f"""
+        UPDATE Game
+        SET {update_camp} = ?
+        WHERE id = ?
+    """
+
+    cur.execute(query, (
+        data[update_camp],
+        game_id
+    ))
+
+    con.commit()
+    return "Item updated"
+
+
+# Update one camp of Purchase table:
+@app.put("/Purchase/update/{purchase_id}/{update_camp}")
+async def update_one_purchase(purchase_id: int,
+                              update_camp: str,
+                              item: Purchase):
+    data = item.dict()
+    query = f"""
+        UPDATE Purchase
+        SET {update_camp} = ?
+        WHERE id = ?
+    """
+
+    cur.execute(query, (
+        data[update_camp],
+        purchase_id
+    ))
+
+    con.commit()
+    return "Item updated"
+
+
+# Update one camp of Review table:
+@app.put("/Review/update/{review_id}/{update_camp}")
+async def update_one_review(review_id: int,
+                            update_camp: str,
+                            item: Review):
+    data = item.dict()
+    query = f"""
+        UPDATE User
+        SET {update_camp} = ?
+        WHERE id = ?
+    """
+
+    cur.execute(query, (
+        data[update_camp],
+        review_id
     ))
 
     con.commit()
