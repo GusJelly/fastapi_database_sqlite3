@@ -5,7 +5,7 @@ from models import Game, User, Purchase, Review
 # Create connection to database file:
 database_path = "online_game_shop.db"
 con = sqlite3.connect(database_path)  # conexao a base de dados
-cur = con.cursor()  # cursor é um ponteiro para uma posicao especifica na base de daodos
+cur = con.cursor()  # ponteiro para uma posicao especifica na base de daodos
 
 app = FastAPI()
 
@@ -94,7 +94,9 @@ async def get_gamer(name: str):
         SELECT * FROM User WHERE name = ?
     """
 
-    cur.execute(query, (name,))  # tem mesmo de ser (name,) para ser uma lista de argumentos
+    cur.execute(query, (
+        name,
+    ))  # tem mesmo de ser (name,) para ser uma lista de argumentos
 
     query_data = cur.fetchone()
 
@@ -362,6 +364,17 @@ async def update_one_review(review_id: int,
     con.commit()
     return "Item updated"
 
+#  ===========================================================================
+
+
+# DELETE endpoints  ==========================================================
+@app.delete("/delete/{table}")
+async def delete_table(table: str, table_name: str):
+    query = f"""
+        DROP TABLE IF EXISTS {table_name};
+    """
+    cur.execute(query)
+    con.commit()
 
 #  ===========================================================================
 

@@ -18,7 +18,6 @@ class Game(BaseModel):
     age_range: int
 
 
-
 class Purchase(BaseModel):
     id: Optional[int]
     game_id: int
