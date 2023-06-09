@@ -88,7 +88,7 @@ async def setup_review():
 
 # Pesquisar por um User por nome:
 @app.get("/User")
-async def get_gamer(name: str):
+async def get_user(name: str):
 
     query = """
         SELECT * FROM User WHERE name = ?
@@ -149,7 +149,7 @@ async def get_review(id: int):
         return {"message": "Review not found"}
 
 # pesquisar uma purchase por id
-@app.get("/Review")
+@app.get("/Purchase")
 async def get_purchase(id: int):
 
     query = """
