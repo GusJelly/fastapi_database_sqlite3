@@ -126,16 +126,56 @@ async def get_game(id: int):
                 "age_range": query_data[4]
                 }
     else:
-        return {"message": "Gamer not found"}
+        return {"message": "Game not found"}
 
-# TODO get_Purchase e get_Review
+# pesquisar uma review por id
+@app.get("/Review")
+async def get_review(id: int):
+
+    query = """
+        SELECT * FROM Game WHERE id = ?;
+    """
+    cur.execute(query, (id,))
+    query_data = cur.fetchone()
+
+    if query_data:
+        return {
+                "user_id": query_data[1],
+                "game_id": query_data[2],
+                "message": query_data[3],
+                "rating": query_data[4]
+                }
+    else:
+        return {"message": "Review not found"}
+
+# pesquisar uma purchase por id
+@app.get("/Review")
+async def get_purchase(id: int):
+
+    query = """
+        SELECT * FROM Game WHERE id = ?;
+    """
+    cur.execute(query, (id,))
+    query_data = cur.fetchone()
+
+    if query_data:
+        return {
+                "game_id": query_data[1],
+                "user_id": query_data[2],
+                "price": query_data[3],
+                "date": query_data[4]
+                }
+    else:
+        return {"message": "Purchase not found"}
+
+
 
 # Post endpoints:  ============================================================
 
 
 # Post a new game into the Game table:
 @app.post("/Game/post")
-async def create_game(item: Game):
+async def insert_game(item: Game):
     data = item.dict()
     query = """
         INSERT INTO Game (
@@ -161,7 +201,7 @@ async def create_game(item: Game):
 
 # Post a new user into the User table:
 @app.post("/User/post")
-async def create_user(item: User):
+async def insert_user(item: User):
     data = item.dict()
     query = """
         INSERT INTO User (
@@ -184,7 +224,7 @@ async def create_user(item: User):
 
 # Post a new purchase into the purchase table:
 @app.post("/Purchase/post")
-async def create_purchase(item: Purchase):
+async def insert_purchase(item: Purchase):
     data = item.dict()
     query = """
         INSERT INTO Purchase (
@@ -209,7 +249,7 @@ async def create_purchase(item: Purchase):
 
 # Post a new review into the review table:
 @app.post("/Review/post")
-async def create_review(item: Review):
+async def insert_review(item: Review):
     data = item.dict()
     query = """
         INSERT INTO Review (
@@ -362,6 +402,65 @@ async def update_one_review(review_id: int,
     con.commit()
     return "Item updated"
 
+#Delete de um jogo
+@app.delete("/Game/delete/{game_id}")
+async def delete_one_game(game_id: int,
+                          item: Game):
+    data = item.dict()
+    query = f"""
+        DELETE FROM Game
+        WHERE id = ?
+    """
+
+    cur.execute(query, (game_id,))
+
+    con.commit()
+    return "Item updated"
+
+#Delete de um user
+@app.delete("/User/delete/{user_id}")
+async def delete_one_user(user_id: int,
+                          item: User):
+    data = item.dict()
+    query = f"""
+        DELETE FROM User
+        WHERE id = ?
+    """
+
+    cur.execute(query, (user_id,))
+
+    con.commit()
+    return "Item updated"
+
+#Delete de uma review
+@app.delete("/Review/delete/{review_id}")
+async def delete_one_review(review_id: int,
+                          item: Review):
+    data = item.dict()
+    query = f"""
+        DELETE FROM Review
+        WHERE id = ?
+    """
+
+    cur.execute(query, (review_id,))
+
+    con.commit()
+    return "Item updated"
+
+#Delete de uma purchase
+@app.delete("/Purchase/delete/{purchase_id}")
+async def delete_one_purchase(purchase_id: int,
+                          item: Purchase):
+    data = item.dict()
+    query = f"""
+        DELETE FROM Purchase
+        WHERE id = ?
+    """
+
+    cur.execute(query, (purchase_id,))
+
+    con.commit()
+    return "Item updated"
 
 #  ===========================================================================
 
